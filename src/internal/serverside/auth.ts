@@ -1,12 +1,12 @@
-import {TesseralClient, TesseralError} from "@tesseral/tesseral-node";
-import {AuthenticateApiKeyResponse} from "@tesseral/tesseral-node/api";
-import {AccessTokenClaims} from "@tesseral/tesseral-vanilla-clientside/api";
-import {cookies, headers} from "next/headers";
-import {notFound, redirect} from "next/navigation";
-import {cache} from "react";
+import { TesseralClient, TesseralError } from "@tesseral/tesseral-node";
+import { AuthenticateApiKeyResponse } from "@tesseral/tesseral-node/api";
+import { AccessTokenClaims } from "@tesseral/tesseral-vanilla-clientside/api";
+import { cookies, headers } from "next/headers";
+import { notFound, redirect } from "next/navigation";
+import { cache } from "react";
 
-import {getConfig} from "../common/config";
-import {isAPIKeyFormat, isJWTFormat} from "./credentials";
+import { getConfig } from "../common/config";
+import { isAPIKeyFormat, isJWTFormat } from "./credentials";
 
 /**
  * Parameters for {@link auth}.
@@ -160,7 +160,7 @@ function authAbort(options: AuthOptions): never {
       throw new AuthError("Not authenticated");
     case "redirect":
       redirect(`/_tesseral_next/redirect-login`);
-      // eslint-disable-next-line no-fallthrough
+    // eslint-disable-next-line no-fallthrough
     case "return_404":
       notFound();
   }
