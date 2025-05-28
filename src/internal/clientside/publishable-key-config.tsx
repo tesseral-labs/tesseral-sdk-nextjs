@@ -43,7 +43,7 @@ export function PublishableKeyConfigProvider({ children }: { children?: React.Re
         setError(e);
       }
     })();
-  }, []);
+  }, [configApiHostname]);
 
   useEffect(() => {
     if (!publishableKeyConfig) {
