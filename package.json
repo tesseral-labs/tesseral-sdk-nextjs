@@ -21,6 +21,7 @@
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "^22.15.23",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "esbuild": "^0.25.0",
@@ -39,6 +40,7 @@
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "dependencies": {
+    "@tesseral/tesseral-node": "^0.0.17",
     "@tesseral/tesseral-vanilla-clientside": "^0.0.8",
     "next": "^15.3.2"
   }

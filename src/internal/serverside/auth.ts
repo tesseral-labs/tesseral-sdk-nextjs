@@ -1,12 +1,12 @@
-import { TesseralClient, TesseralError } from "@tesseral/tesseral-node";
-import { AuthenticateApiKeyResponse } from "@tesseral/tesseral-node/api";
-import { AccessTokenClaims } from "@tesseral/tesseral-vanilla-clientside/api";
-import { cookies, headers } from "next/headers";
-import { notFound, redirect } from "next/navigation";
-import { cache } from "react";
+import {TesseralClient, TesseralError} from "@tesseral/tesseral-node";
+import {AuthenticateApiKeyResponse} from "@tesseral/tesseral-node/api";
+import {AccessTokenClaims} from "@tesseral/tesseral-vanilla-clientside/api";
+import {cookies, headers} from "next/headers";
+import {notFound, redirect} from "next/navigation";
+import {cache} from "react";
 
-import { getConfig } from "../common/config";
-import { isAPIKeyFormat, isJWTFormat } from "./credentials";
+import {getConfig} from "../common/config";
+import {isAPIKeyFormat, isJWTFormat} from "./credentials";
 
 /**
  * Parameters for {@link auth}.
@@ -143,7 +143,7 @@ export const auth = cache(async (options: AuthOptions): Promise<Auth> => {
 
     return {
       credentialsType: "api_key",
-      organizationId: authenticateApiKeyResponse.organizationId,
+      organizationId: authenticateApiKeyResponse.organizationId!,
       credentials,
       hasPermission: (action: string): boolean => {
         return authenticateApiKeyResponse.actions?.includes(action) || false;
@@ -173,13 +173,13 @@ async function extractCredentials(): Promise<string> {
   const requestHeaders = await headers();
 
   if (requestHeaders.get("authorization")?.startsWith(PREFIX_BEARER)) {
-    return requestHeaders.get("authorization")?.substring(PREFIX_BEARER.length);
+    return requestHeaders.get("authorization")!.substring(PREFIX_BEARER.length);
   }
 
   const cookieStore = await cookies();
   const cookieName = `tesseral_${projectId}_access_token`;
   if (cookieStore.has(cookieName)) {
-    return cookieStore.get(cookieName).value;
+    return cookieStore.get(cookieName)!.value;
   }
   return "";
 }

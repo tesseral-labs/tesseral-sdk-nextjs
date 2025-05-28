@@ -77,7 +77,7 @@ function accessTokenLikelyValid(accessToken: string): boolean {
   }
 
   const claims = parseAccessToken(accessToken);
-  return claims?.exp > Date.now() / 1000;
+  return !!claims?.exp && claims.exp > Date.now() / 1000;
 }
 
 function parseAccessToken(accessToken: string): { exp?: number } {

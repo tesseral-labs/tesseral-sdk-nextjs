@@ -6,7 +6,7 @@ import { AuthError, auth } from "./auth";
 export async function getOrganization(): Promise<AccessTokenOrganization> {
   try {
     const { accessTokenClaims } = await auth({ or: "throw" });
-    return accessTokenClaims.organization;
+    return accessTokenClaims!.organization;
   } catch (e) {
     if (e instanceof AuthError) {
       throw new Error("getOrganization() must be called from a child component of TesseralProvider");
@@ -18,7 +18,7 @@ export async function getOrganization(): Promise<AccessTokenOrganization> {
 export async function getUser(): Promise<AccessTokenUser> {
   try {
     const { accessTokenClaims } = await auth({ or: "throw" });
-    return accessTokenClaims.user;
+    return accessTokenClaims!.user;
   } catch (e) {
     if (e instanceof AuthError) {
       throw new Error("getUser() must be called from a child component of TesseralProvider");

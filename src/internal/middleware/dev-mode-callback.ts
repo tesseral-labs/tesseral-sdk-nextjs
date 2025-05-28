@@ -6,7 +6,16 @@ import { sha256 } from "./sha256";
 
 export async function devModeCallback(req: NextRequest): Promise<NextResponse> {
   const { projectId, vaultDomain } = await getConfig();
+
   const relayedSessionToken = req.nextUrl.searchParams.get(`__tesseral_${projectId}_relayed_session_token`);
+  if (!relayedSessionToken) {
+    throw new Error(`No __tesseral_${projectId}_relayed_session_token found`);
+  }
+
+  const redirectUrl = req.nextUrl.searchParams.get(`__tesseral_${projectId}_redirect_uri`);
+  if (!redirectUrl) {
+    throw new Error(`No __tesseral_${projectId}_redirect_uri found`);
+  }
 
   const { refreshToken, accessToken, relayedSessionState } = await exchangeRelayedSessionToken({
     vaultDomain,
@@ -19,8 +28,6 @@ export async function devModeCallback(req: NextRequest): Promise<NextResponse> {
   if ((await sha256(relayedSessionState)) !== relayedSessionStateSha256?.value) {
     throw new Error("Relayed session state does not match expected value");
   }
-
-  const redirectUrl = req.nextUrl.searchParams.get(`__tesseral_${projectId}_redirect_uri`);
 
   const response = NextResponse.redirect(redirectUrl);
   response.cookies.set(`tesseral_${projectId}_refresh_token`, refreshToken, {

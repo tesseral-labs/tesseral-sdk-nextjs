@@ -26,7 +26,7 @@ function useAccessToken(): string {
   const projectId = useProjectId();
   const vaultDomain = useVaultDomain();
   const frontendApiClient = useFrontendApiClientInternal();
-  const [accessToken, setAccessToken] = useState<string>(() => {
+  const [accessToken, setAccessToken] = useState<string | undefined>(() => {
     return getCookie(`tesseral_${projectId}_access_token`);
   });
 
@@ -58,5 +58,6 @@ function useAccessToken(): string {
     throw error;
   }
 
-  return accessToken;
+  // the "!" is safe, accessTokenLikelyValid checks for this
+  return accessToken!;
 }

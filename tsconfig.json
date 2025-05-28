@@ -11,9 +11,19 @@
     "sourceMap": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
-    "lib": ["es2021", "dom"],
-    "strict": true,
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "strict": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "src/test-app"]
+  "include": [
+    "next-env.d.ts",
+    "src"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/test-app"
+  ]
 }
