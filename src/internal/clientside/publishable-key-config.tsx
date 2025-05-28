@@ -12,6 +12,8 @@ interface PublishableKeyConfig {
 const PublishableKeyConfigContext = createContext<PublishableKeyConfig | undefined>(undefined);
 
 export function PublishableKeyConfigProvider({ children }: { children?: React.ReactNode }) {
+  const configApiHostname = process.env.NEXT_PUBLIC_TESSERAL_CONFIG_API_HOSTNAME || `config.tesseral.com`;
+
   const [publishableKeyConfig, setPublishableKeyConfig] = useState<PublishableKeyConfig | undefined>();
   const [validatedPublishableKeyConfig, setValidatedPublishableKeyConfig] = useState<
     PublishableKeyConfig | undefined
@@ -22,11 +24,11 @@ export function PublishableKeyConfigProvider({ children }: { children?: React.Re
     (async () => {
       try {
         const response = await fetch(
-          `https://${process.env.NEXT_PUBLIC_TESSERAL_CONFIG_API_HOSTNAME}/v1/config/${process.env.NEXT_PUBLIC_TESSERAL_PUBLISHABLE_KEY}`,
+          `https://${configApiHostname}/v1/config/${process.env.NEXT_PUBLIC_TESSERAL_PUBLISHABLE_KEY}`,
         );
         if (response.status === 400 || response.status === 404) {
           throw new Error(
-            `Tesseral Publishable Key ${process.env.NEXT_PUBLIC_TESSERAL_PUBLISHABLE_KEY} not found. Go to https://console.tesseral.com/project-settings/publishable-keys to see your list of Publishable Keys, and then update your <TesseralProvider publishableKey={...} /> call to use one of those keys.`,
+            `Tesseral Publishable Key ${configApiHostname} not found. Go to https://console.tesseral.com/project-settings/publishable-keys to see your list of Publishable Keys, and then update your <TesseralProvider publishableKey={...} /> call to use one of those keys.`,
           );
         }
         if (!response.ok) {
