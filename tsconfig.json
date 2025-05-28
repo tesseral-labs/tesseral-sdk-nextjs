@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "rootDir": "src",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es2015",
+    "sourceMap": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "lib": ["es2021", "dom"],
+    "strict": true,
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "src/test-app"]
+}
