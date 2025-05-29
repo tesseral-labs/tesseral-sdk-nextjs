@@ -29,6 +29,7 @@ export const getConfig = cache(async (): Promise<Config> => {
   return await parseConfig(configData);
 });
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function parseConfig(configData: any): Promise<Config> {
   const jwks: Record<string, CryptoKey> = {};
   for (const key of configData.keys) {
