@@ -26,7 +26,10 @@ export const getConfig = cache(async (): Promise<Config> => {
   }
 
   const configData = await configResponse.json();
+  return await parseConfig(configData);
+});
 
+async function parseConfig(configData: any): Promise<Config> {
   const jwks: Record<string, CryptoKey> = {};
   for (const key of configData.keys) {
     if (key.kty !== "EC" || key.crv !== "P-256") {
@@ -51,4 +54,6 @@ export const getConfig = cache(async (): Promise<Config> => {
     devMode: configData.devMode,
     jwks,
   };
-});
+}
+
+export const __exportedForTests = { parseConfig };

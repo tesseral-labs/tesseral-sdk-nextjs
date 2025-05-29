@@ -233,3 +233,8 @@ async function authenticateAccessToken({
 function base64URLDecode(s: string): string {
   return Buffer.from(s.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString();
 }
+
+export const __exportedForTests = {
+  authenticateAccessToken,
+  base64URLDecode,
+};
