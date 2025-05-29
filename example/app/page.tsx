@@ -1,23 +1,25 @@
-import {getOrganization, getUser} from "../../src/serverside";
-import {ClientComponent} from "./client-component";
+import { useState } from "react";
+
+import { auth, getOrganization, getUser } from "../../src/serverside";
+import { ClientComponent } from "./client-component";
 
 export default async function Page() {
-    const organization = await getOrganization();
-    const user = await getUser();
+  const organization = await getOrganization();
+  const user = await getUser();
 
-    return (
-        <div>
-            <div>React Server Component: getOrganization()</div>
-            <code>
-                <pre>{JSON.stringify(organization, null, 2)}</pre>
-            </code>
+  return (
+    <div>
+      <div>React Server Component: getOrganization()</div>
+      <code>
+        <pre>{JSON.stringify(organization, null, 2)}</pre>
+      </code>
 
-            <div>React Server Component: getUser()</div>
-            <code>
-                <pre>{JSON.stringify(user, null, 2)}</pre>
-            </code>
+      <div>React Server Component: getUser()</div>
+      <code>
+        <pre>{JSON.stringify(user, null, 2)}</pre>
+      </code>
 
-            <ClientComponent />
-        </div>
-    )
+      <ClientComponent />
+    </div>
+  );
 }
