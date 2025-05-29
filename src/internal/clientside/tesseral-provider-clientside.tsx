@@ -2,10 +2,10 @@
 
 import React, { useContext, useMemo } from "react";
 
+import { parseAccessToken } from "../common/parse-access-token";
 import { DefaultModeAccessTokenProvider } from "./default-mode-access-token-provider";
 import { DevModeAccessTokenProvider } from "./dev-mode-access-token-provider";
 import { InternalAccessTokenContext } from "./internal-access-token-context";
-import { parseAccessToken } from "./parse-access-token";
 import { PublishableKeyConfigProvider, useDevMode, useVaultDomain } from "./publishable-key-config";
 import { TesseralContext, TesseralContextData } from "./tesseral-context";
 

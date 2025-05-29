@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getConfig } from "../common/config";
+import { parseAccessToken } from "../common/parse-access-token";
 import { devModeCallback } from "./dev-mode-callback";
 import { redirectLogin } from "./redirect-login";
 
@@ -78,12 +79,6 @@ function accessTokenLikelyValid(accessToken: string): boolean {
 
   const claims = parseAccessToken(accessToken);
   return !!claims?.exp && claims.exp > Date.now() / 1000;
-}
-
-function parseAccessToken(accessToken: string): { exp?: number } {
-  const claimsPart = accessToken.split(".")[1];
-  const decodedClaims = new TextDecoder().decode(Uint8Array.from(atob(claimsPart), (c) => c.charCodeAt(0)));
-  return JSON.parse(decodedClaims);
 }
 
 class InvalidRefreshTokenError extends Error {}
