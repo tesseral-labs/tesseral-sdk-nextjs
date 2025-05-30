@@ -8,4 +8,5 @@ export {
   useOrganizationSettingsUrl,
   useUserSettingsUrl,
   useHasPermission,
+  useLogout,
 } from "./internal/clientside/hooks";
