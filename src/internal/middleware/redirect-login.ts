@@ -4,7 +4,11 @@ import { getConfig } from "../common/config";
 import { sha256 } from "./sha256";
 
 export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
-  const { projectId, vaultDomain, devMode } = await getConfig();
+  const { projectId, vaultDomain, devMode, trustedDomains } = await getConfig();
+
+  if (!trustedDomains.includes(req.nextUrl.origin.replace(/^https?:\/\//, ""))) {
+    throw new Error(`Tesseral running on untrusted domain: ${req.nextUrl.origin}`);
+  }
 
   if (devMode) {
     const relayedSessionState = crypto.randomUUID();
@@ -22,6 +26,8 @@ export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
       name: `tesseral_${projectId}_relayed_session_state_sha256`,
       value: await sha256(relayedSessionState),
       httpOnly: true,
+      path: "/",
+      secure: req.nextUrl.protocol === "https:",
     });
 
     return response;

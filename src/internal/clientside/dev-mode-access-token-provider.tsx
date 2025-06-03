@@ -84,7 +84,11 @@ function useAccessToken(): string {
     if (!accessTokenLikelyValid) {
       return;
     }
-    setCookie(`tesseral_${projectId}_access_token`, accessToken!);
+
+    // Only reset the cookie if it's been refreshed or wasn't set before
+    if (accessToken !== getCookie(`tesseral_${projectId}_access_token`)) {
+      setCookie(`tesseral_${projectId}_access_token`, accessToken!);
+    }
   }, [accessToken, accessTokenLikelyValid, projectId]);
 
   if (error) {
