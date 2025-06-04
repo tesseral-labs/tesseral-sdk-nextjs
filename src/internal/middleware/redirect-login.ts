@@ -27,7 +27,6 @@ export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
       value: await sha256(relayedSessionState),
       httpOnly: true,
       path: "/",
-      secure: req.nextUrl.protocol === "https:",
     });
 
     return response;
