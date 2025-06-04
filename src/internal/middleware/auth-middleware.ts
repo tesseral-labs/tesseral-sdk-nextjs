@@ -66,7 +66,6 @@ export async function authMiddleware(request: NextRequest): Promise<NextResponse
     httpOnly: false,
     maxAge: 60 * 5, // 5 minutes
     path: "/",
-    secure: request.nextUrl.protocol === "https:",
   });
 
   return response;
