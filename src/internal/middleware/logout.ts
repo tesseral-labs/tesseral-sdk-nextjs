@@ -15,7 +15,9 @@ export async function logoutMiddleware(req: NextRequest): Promise<NextResponse> 
   });
 
   const url = new URL("/", req.url);
-  const response = NextResponse.redirect(`${url.toString()}`, 302);
+  const response = NextResponse.redirect(url.toString());
+  // Force next to load the page from the server, not from cache.
+  response.headers.set("Cache-Control", "no-store");
 
   if (devMode) {
     response.cookies.delete(`tesseral_${projectId}_access_token`);
