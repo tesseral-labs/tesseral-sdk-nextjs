@@ -3,6 +3,7 @@ import { cache } from "react";
 interface Config {
   projectId: string;
   vaultDomain: string;
+  cookieDomain?: string;
   devMode: boolean;
   trustedDomains: string[];
   jwks: Record<string, CryptoKey>;
@@ -53,6 +54,7 @@ async function parseConfig(configData: any): Promise<Config> {
   return {
     projectId: configData.projectId,
     vaultDomain: configData.vaultDomain,
+    cookieDomain: configData.cookieDomain,
     devMode: configData.devMode,
     trustedDomains: configData.trustedDomains || [],
     jwks,
