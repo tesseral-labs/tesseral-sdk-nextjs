@@ -35,11 +35,11 @@ export async function logoutMiddleware(req: NextRequest): Promise<NextResponse> 
     // does not support setting the Domain attribute.
     response.headers.append(
       "Set-Cookie",
-      `tesseral_${projectId}_access_token=; Path=/; Domain=.${cookieDomain}; Max-Age=0`,
+      `tesseral_${projectId}_access_token=; Path=/; Domain=${cookieDomain}; Max-Age=0`,
     );
     response.headers.append(
       "Set-Cookie",
-      `tesseral_${projectId}_refresh_token=; Path=/; Domain=.${cookieDomain}; Max-Age=0`,
+      `tesseral_${projectId}_refresh_token=; Path=/; Domain=${cookieDomain}; Max-Age=0`,
     );
   }
 
