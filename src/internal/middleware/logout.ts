@@ -18,14 +18,7 @@ export async function logoutMiddleware(req: NextRequest): Promise<NextResponse> 
     });
 
     if (!res.ok) {
-      return NextResponse.json(
-        {
-          error: await res.text(),
-        },
-        {
-          status: res.status,
-        },
-      );
+      throw new Error(`Error calling vault logout endpoint: ${res.status} - ${await res.text()}`);
     }
   }
 
