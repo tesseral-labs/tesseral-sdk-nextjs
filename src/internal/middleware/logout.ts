@@ -28,18 +28,18 @@ export async function logoutMiddleware(req: NextRequest): Promise<NextResponse> 
   response.cookies.delete(`tesseral_${projectId}_access_token`);
   response.cookies.delete(`tesseral_${projectId}_refresh_token`);
 
-  if (cookieDomain) {
+  if (cookieDomain?.endsWith(req.nextUrl.hostname)) {
     // Also include any session cookies that might have been set
     // on the cookie domain. In order to do this, we need to use
     // the Set-Cookie header directly, as NextResponse.cookies.delete
     // does not support setting the Domain attribute.
     response.headers.append(
       "Set-Cookie",
-      `tesseral_${projectId}_access_token=; Path=/; Domain=${cookieDomain}; Max-Age=0`,
+      `tesseral_${projectId}_access_token=; Path=/; Domain=.${cookieDomain}; Max-Age=0`,
     );
     response.headers.append(
       "Set-Cookie",
-      `tesseral_${projectId}_refresh_token=; Path=/; Domain=${cookieDomain}; Max-Age=0`,
+      `tesseral_${projectId}_refresh_token=; Path=/; Domain=.${cookieDomain}; Max-Age=0`,
     );
   }
 
