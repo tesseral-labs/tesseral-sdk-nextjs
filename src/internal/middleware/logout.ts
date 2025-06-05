@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getConfig } from "../common/config";
 
 export async function logoutMiddleware(req: NextRequest): Promise<NextResponse> {
-  const { cookieDomain, projectId, vaultDomain } = await getConfig();
+  const { projectId, vaultDomain, cookieDomain } = await getConfig();
   const accessToken = req.cookies.get(`tesseral_${projectId}_access_token`)?.value;
 
   // If there is no access token, we can just redirect to the home page.
