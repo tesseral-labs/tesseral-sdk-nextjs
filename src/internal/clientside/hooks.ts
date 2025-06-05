@@ -1,6 +1,5 @@
 import { TesseralClient } from "@tesseral/tesseral-vanilla-clientside";
 import { AccessTokenOrganization, AccessTokenUser } from "@tesseral/tesseral-vanilla-clientside/api";
-import { redirect } from "next/navigation";
 import { useCallback, useContext } from "react";
 
 import { TesseralContext } from "./tesseral-context";
@@ -62,7 +61,7 @@ export function useLogout(): () => void {
   }
 
   return () => {
-    redirect("/_tesseral_next/logout");
+    window.location.href = "/_tesseral_next/logout";
   };
 }
 
