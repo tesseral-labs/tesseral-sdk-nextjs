@@ -29,13 +29,25 @@ export async function devModeCallback(req: NextRequest): Promise<NextResponse> {
     throw new Error("Relayed session state does not match expected value");
   }
 
-  const response = NextResponse.redirect(redirectUrl);
+  // To better handle localhost development, we only want to use the pathname of the redirect URL.
+  const preferredRedirectUrl = new URL(redirectUrl);
+  const actualRedirectUrl = new URL(preferredRedirectUrl.pathname, req.nextUrl);
+
+  const response = NextResponse.redirect(actualRedirectUrl);
+
   response.cookies.set(`tesseral_${projectId}_refresh_token`, refreshToken, {
     httpOnly: false,
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    path: "/",
   });
   response.cookies.set(`tesseral_${projectId}_access_token`, accessToken, {
     httpOnly: false,
+    maxAge: 60 * 5, // 5 minutes
+    path: "/",
   });
+
+  // Remove relayed session state cookie
+  response.cookies.delete(`tesseral_${projectId}_relayed_session_state_sha256`);
 
   return response;
 }

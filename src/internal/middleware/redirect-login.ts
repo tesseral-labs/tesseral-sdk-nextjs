@@ -4,7 +4,13 @@ import { getConfig } from "../common/config";
 import { sha256 } from "./sha256";
 
 export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
-  const { projectId, vaultDomain, devMode } = await getConfig();
+  const { projectId, vaultDomain, devMode, trustedDomains } = await getConfig();
+
+  if (!trustedDomains.includes(req.nextUrl.origin.replace(/^https?:\/\//, ""))) {
+    throw new Error(
+      `Tesseral Project ${projectId} is not configured to be served from ${location.host}. Only the following domains are allowed:\n\n${trustedDomains.join("\n")}\n\nGo to https://console.tesseral.com/project-settings and add ${req.nextUrl.hostname} to your list of trusted domains.`,
+    );
+  }
 
   if (devMode) {
     const relayedSessionState = crypto.randomUUID();
@@ -22,6 +28,7 @@ export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
       name: `tesseral_${projectId}_relayed_session_state_sha256`,
       value: await sha256(relayedSessionState),
       httpOnly: true,
+      path: "/",
     });
 
     return response;

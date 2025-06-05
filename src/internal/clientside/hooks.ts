@@ -3,8 +3,6 @@ import { AccessTokenOrganization, AccessTokenUser } from "@tesseral/tesseral-van
 import { redirect } from "next/navigation";
 import { useCallback, useContext } from "react";
 
-import { deleteCookie } from "./cookie";
-import { useProjectId } from "./publishable-key-config";
 import { TesseralContext } from "./tesseral-context";
 
 export interface UseTesseralResult {
@@ -63,18 +61,9 @@ export function useLogout(): () => void {
     throw new Error(`useLogout() must be called from a child component of TesseralContext`);
   }
 
-  const { frontendApiClient } = useTesseral();
-  const projectId = useProjectId();
-
-  return useCallback(() => {
-    async function logout() {
-      deleteCookie(`tesseral_${projectId}_access_token`);
-      await frontendApiClient.logout({});
-      redirect("/");
-    }
-
-    void logout();
-  }, [frontendApiClient, projectId]);
+  return () => {
+    redirect("/_tesseral_next/logout");
+  };
 }
 
 export function useOrganizationSettingsUrl(): string {

@@ -84,6 +84,7 @@ function useAccessToken(): string {
     if (!accessTokenLikelyValid) {
       return;
     }
+
     setCookie(`tesseral_${projectId}_access_token`, accessToken!);
   }, [accessToken, accessTokenLikelyValid, projectId]);
 

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getConfig } from "../common/config";
 import { parseAccessToken } from "../common/parse-access-token";
 import { devModeCallback } from "./dev-mode-callback";
+import { logoutMiddleware } from "./logout";
 import { redirectLogin } from "./redirect-login";
 
 export async function authMiddleware(request: NextRequest): Promise<NextResponse> {
@@ -12,6 +13,8 @@ export async function authMiddleware(request: NextRequest): Promise<NextResponse
       return redirectLogin(request);
     case "/_tesseral_next/dev-mode-callback":
       return devModeCallback(request);
+    case "/_tesseral_next/logout":
+      return logoutMiddleware(request);
   }
 
   // If the request has an Authorization header, then presume this is some sort
@@ -61,6 +64,8 @@ export async function authMiddleware(request: NextRequest): Promise<NextResponse
 
   response.cookies.set(`tesseral_${projectId}_access_token`, exchangedAccessToken, {
     httpOnly: false,
+    maxAge: 60 * 5, // 5 minutes
+    path: "/",
   });
 
   return response;

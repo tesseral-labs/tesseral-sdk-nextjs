@@ -4,6 +4,7 @@ interface Config {
   projectId: string;
   vaultDomain: string;
   devMode: boolean;
+  trustedDomains: string[];
   jwks: Record<string, CryptoKey>;
 }
 
@@ -53,6 +54,7 @@ async function parseConfig(configData: any): Promise<Config> {
     projectId: configData.projectId,
     vaultDomain: configData.vaultDomain,
     devMode: configData.devMode,
+    trustedDomains: configData.trustedDomains || [],
     jwks,
   };
 }
