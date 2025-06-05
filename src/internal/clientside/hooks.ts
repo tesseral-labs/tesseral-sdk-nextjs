@@ -62,7 +62,7 @@ export function useLogout(): () => void {
   }
 
   return () => {
-    redirect("/_tesseral_next/logout");
+    window.location.href = "/_tesseral_next/logout";
   };
 }
 
