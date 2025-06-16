@@ -1,11 +1,24 @@
 {
   "name": "@tesseral/tesseral-nextjs",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
-  "main": "dist/index.js",
   "files": [
     "dist"
   ],
+  "exports": {
+    "./serverside": {
+      "types": "./dist/serverside.d.ts",
+      "import": "./dist/serverside.js"
+    },
+    "./clientside": {
+      "types": "./dist/clientside.d.ts",
+      "import": "./dist/clientside.js"
+    },
+    "./middleware": {
+      "types": "./dist/middleware.d.ts",
+      "import": "./dist/middleware.js"
+    }
+  },
   "scripts": {
     "lint": "eslint src",
     "tsc-check": "tsc --noEmit",
