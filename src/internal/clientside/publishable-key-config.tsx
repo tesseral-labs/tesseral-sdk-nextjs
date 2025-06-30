@@ -28,7 +28,7 @@ export function PublishableKeyConfigProvider({ children }: { children?: React.Re
         );
         if (response.status === 400 || response.status === 404) {
           throw new Error(
-            `Tesseral Publishable Key ${configApiHostname} not found. Go to https://console.tesseral.com/project-settings/publishable-keys to see your list of Publishable Keys, and then update your <TesseralProvider publishableKey={...} /> call to use one of those keys.`,
+            `Tesseral Publishable Key ${configApiHostname} not found. Go to https://console.tesseral.example.com/settings/api-keys to see your list of Publishable Keys, and then update your <TesseralProvider publishableKey={...} /> call to use one of those keys.`,
           );
         }
         if (!response.ok) {
@@ -53,7 +53,7 @@ export function PublishableKeyConfigProvider({ children }: { children?: React.Re
     if (location.host !== "" && !publishableKeyConfig.trustedDomains.includes(location.host)) {
       setError(
         new Error(
-          `Tesseral Project ${publishableKeyConfig.projectId} is not configured to be served from ${location.host}. Only the following domains are allowed:\n\n${publishableKeyConfig.trustedDomains.join("\n")}\n\nGo to https://console.tesseral.com/project-settings and add ${location.host} to your list of trusted domains.`,
+          `Tesseral Project ${publishableKeyConfig.projectId} is not configured to be served from ${location.host}. Only the following domains are allowed:\n\n${publishableKeyConfig.trustedDomains.join("\n")}\n\nGo to https://console.tesseral.example.com/settings/vault/domains and add ${location.host} to your list of trusted domains.`,
         ),
       );
     }
