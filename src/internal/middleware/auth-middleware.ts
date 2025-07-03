@@ -17,25 +17,34 @@ export async function authMiddleware(request: NextRequest): Promise<NextResponse
       return logoutMiddleware(request);
   }
 
+  const { projectId } = await getConfig();
+  const forwardedHeaders = new Headers(request.headers);
+  forwardedHeaders.append(`x-tesseral-${projectId}-redirect-uri`, request.nextUrl.href);
+
   // If the request has an Authorization header, then presume this is some sort
   // of API call. Do nothing.
   if (request.headers.has("authorization")) {
-    return NextResponse.next();
+    return NextResponse.next({
+      headers: forwardedHeaders,
+    });
   }
 
-  const { projectId } = await getConfig();
   const accessToken = request.cookies.get(`tesseral_${projectId}_access_token`);
   const refreshToken = request.cookies.get(`tesseral_${projectId}_refresh_token`);
 
   // If the access token is likely valid, then do nothing.
   if (accessToken && accessTokenLikelyValid(accessToken.value)) {
-    return NextResponse.next();
+    return NextResponse.next({
+      headers: forwardedHeaders,
+    });
   }
 
   // If there is no refresh token, then there is no optimistic work we can do
   // here. This is an unauthenticated request.
   if (!refreshToken) {
-    return NextResponse.next();
+    return NextResponse.next({
+      headers: forwardedHeaders,
+    });
   }
 
   // Optimistically exchange refresh token for access token.
@@ -46,7 +55,9 @@ export async function authMiddleware(request: NextRequest): Promise<NextResponse
   } catch (e) {
     if (e instanceof InvalidRefreshTokenError) {
       // The refresh token is invalid. This is an unauthenticated request.
-      return NextResponse.next();
+      return NextResponse.next({
+        headers: forwardedHeaders,
+      });
     }
 
     throw e;
@@ -55,7 +66,6 @@ export async function authMiddleware(request: NextRequest): Promise<NextResponse
   // We now have a new, optimistically-acquired access token. Attach it to the
   // upstream request and the downstream response.
 
-  const forwardedHeaders = new Headers(request.headers);
   forwardedHeaders.append("Cookie", `tesseral_${projectId}_access_token=${exchangedAccessToken}`);
 
   const response = NextResponse.next({
