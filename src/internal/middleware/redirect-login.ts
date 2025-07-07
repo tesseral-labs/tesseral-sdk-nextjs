@@ -8,7 +8,7 @@ export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
 
   if (!trustedDomains.includes(req.nextUrl.host)) {
     throw new Error(
-      `Tesseral Project ${projectId} is not configured to be served from ${req.nextUrl.host}. Only the following domains are allowed:\n\n${trustedDomains.join("\n")}\n\nGo to https://console.tesseral.com/project-settings and add ${req.nextUrl.host} to your list of trusted domains.`,
+      `Tesseral Project ${projectId} is not configured to be served from ${req.nextUrl.host}. Only the following domains are allowed:\n\n${trustedDomains.join("\n")}\n\nGo to https://console.tesseral.com/settings/vault/domains and add ${req.nextUrl.host} to your list of trusted domains.`,
     );
   }
 
