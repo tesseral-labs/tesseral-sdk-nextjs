@@ -112,7 +112,7 @@ export const auth = cache(async (options: AuthOptions): Promise<Auth> => {
       });
     } catch (e) {
       if (e instanceof AuthError) {
-        authAbort(options);
+        return await authAbort(options);
       }
       throw e;
     }
@@ -136,7 +136,7 @@ export const auth = cache(async (options: AuthOptions): Promise<Auth> => {
       });
     } catch (e) {
       if (e instanceof TesseralError && e.message === "unauthenticated_api_key") {
-        authAbort(options);
+        return await authAbort(options);
       }
       throw e;
     }
@@ -150,16 +150,16 @@ export const auth = cache(async (options: AuthOptions): Promise<Auth> => {
       },
     };
   } else {
-    authAbort(options);
+    return await authAbort(options);
   }
 });
 
-function authAbort(options: AuthOptions): never {
+async function authAbort(options: AuthOptions): Promise<never> {
   switch (options.or) {
     case "throw":
       throw new AuthError("Not authenticated");
     case "redirect":
-      redirect(`/_tesseral_next/redirect-login`);
+      await handleRedirect();
     // eslint-disable-next-line no-fallthrough
     case "return_404":
       notFound();
@@ -182,6 +182,27 @@ async function extractCredentials(): Promise<string> {
     return cookieStore.get(cookieName)!.value;
   }
   return "";
+}
+
+async function extractRedirectUri(): Promise<string | undefined> {
+  const { projectId } = await getConfig();
+  const requestHeaders = await headers();
+  const redirectUri = requestHeaders.get(`x-tesseral-${projectId}-redirect-uri`);
+
+  if (redirectUri) {
+    return redirectUri;
+  }
+
+  return;
+}
+
+async function handleRedirect(): Promise<void> {
+  const queryParams = new URLSearchParams();
+  const redirectUri = await extractRedirectUri();
+  if (redirectUri) {
+    queryParams.set("redirect-uri", redirectUri);
+  }
+  redirect(`/_tesseral_next/redirect-login?${queryParams.toString()}`);
 }
 
 async function authenticateAccessToken({

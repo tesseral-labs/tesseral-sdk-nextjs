@@ -71,7 +71,10 @@ function useAccessToken(): string {
       } catch (e) {
         if (e instanceof TesseralError && e.statusCode === 401) {
           // our refresh token is no good
-          redirect(`/_tesseral_next/redirect-login`);
+          const queryParams = new URLSearchParams({
+            "redirect-uri": window.location.href,
+          });
+          redirect(`/_tesseral_next/redirect-login?${queryParams.toString()}`);
         }
 
         setError(e);

@@ -12,9 +12,12 @@ export async function devModeCallback(req: NextRequest): Promise<NextResponse> {
     throw new Error(`No __tesseral_${projectId}_relayed_session_token found`);
   }
 
-  const redirectUrl = req.nextUrl.searchParams.get(`__tesseral_${projectId}_redirect_uri`);
+  let redirectUrl = req.nextUrl.searchParams.get(`redirect-uri`);
   if (!redirectUrl) {
-    throw new Error(`No __tesseral_${projectId}_redirect_uri found`);
+    redirectUrl = req.nextUrl.searchParams.get(`__tesseral_${projectId}_redirect_uri`);
+    if (!redirectUrl) {
+      throw new Error(`No __tesseral_${projectId}_redirect_uri found`);
+    }
   }
 
   const { refreshToken, accessToken, relayedSessionState } = await exchangeRelayedSessionToken({

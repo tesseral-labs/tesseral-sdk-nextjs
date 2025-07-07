@@ -11,7 +11,10 @@ export async function TesseralProvider({ children }: { children?: React.ReactNod
     // If auth() is happy but there are no claims, then this is a request coming
     // from an API key. But TesseralProvider is only useful for browsers.
     // Redirect this request away.
-    redirect(`/_tesseral_next/redirect-login`);
+    const queryParams = new URLSearchParams({
+      "redirect-uri": window.location.href,
+    });
+    redirect(`/_tesseral_next/redirect-login?${queryParams.toString()}`);
   }
 
   return (

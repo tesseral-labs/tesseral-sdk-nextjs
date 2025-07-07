@@ -17,7 +17,10 @@ export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
 
     const params = new URLSearchParams();
     params.set("relayed-session-state", relayedSessionState);
-    params.set("redirect-uri", `${req.nextUrl.protocol}//${req.nextUrl.host}/_tesseral_next/dev-mode-callback`);
+    params.set(
+      "redirect-uri",
+      `${req.nextUrl.protocol}//${req.nextUrl.host}/_tesseral_next/dev-mode-callback${req.nextUrl.search}`,
+    );
     params.set("return-relayed-session-token-as-query-param", "1");
 
     const redirectUrl = new URL(`https://${vaultDomain}/login`);
@@ -34,5 +37,5 @@ export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
     return response;
   }
 
-  return NextResponse.redirect(`https://${vaultDomain}/login`);
+  return NextResponse.redirect(`https://${vaultDomain}/login?${req.nextUrl.search}`);
 }
