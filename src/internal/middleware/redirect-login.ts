@@ -5,10 +5,22 @@ import { sha256 } from "./sha256";
 
 export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
   const { projectId, vaultDomain, devMode, trustedDomains } = await getConfig();
+  // Support the `NEXT_PUBLIC_TESSERAL_REDIRECT_BASE_URL` environment variable to allow overriding the redirect base URL.
+  // This is useful for non-Vercel deployment environments where Next.js may not parse the `Host` correctly.
+  const tesseralRedirectBaseUrl =
+    process.env.NEXT_PUBLIC_TESSERAL_REDIRECT_BASE_URL &&
+    process.env.NEXT_PUBLIC_TESSERAL_REDIRECT_BASE_URL.trim() !== ""
+      ? process.env.NEXT_PUBLIC_TESSERAL_REDIRECT_BASE_URL
+      : req.nextUrl.origin;
+  // Build a URL for the redirect that includes the path and search parameters from the original request, but uses the parsed base URL.
+  const requestUrl = new URL(req.nextUrl.pathname + req.nextUrl.search, tesseralRedirectBaseUrl);
 
-  if (!trustedDomains.includes(req.nextUrl.host)) {
+  if (
+    !trustedDomains.includes(requestUrl.host) &&
+    !trustedDomains.some((domain) => requestUrl.host.endsWith(`.${domain}`) || requestUrl.host.startsWith(`${domain}:`))
+  ) {
     throw new Error(
-      `Tesseral Project ${projectId} is not configured to be served from ${req.nextUrl.host}. Only the following domains are allowed:\n\n${trustedDomains.join("\n")}\n\nGo to https://console.tesseral.com/settings/vault/domains and add ${req.nextUrl.host} to your list of trusted domains.`,
+      `Tesseral Project ${projectId} is not configured to be served from ${requestUrl.host}. Only the following domains are allowed:\n\n${trustedDomains.join("\n")}\n\nGo to https://console.tesseral.com/settings/vault/domains and add ${requestUrl.host} to your list of trusted domains.`,
     );
   }
 
@@ -19,7 +31,7 @@ export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
     params.set("relayed-session-state", relayedSessionState);
     params.set(
       "redirect-uri",
-      `${req.nextUrl.protocol}//${req.nextUrl.host}/_tesseral_next/dev-mode-callback${req.nextUrl.search}`,
+      `${requestUrl.protocol}//${requestUrl.host}/_tesseral_next/dev-mode-callback${requestUrl.search}`,
     );
     params.set("return-relayed-session-token-as-query-param", "1");
 
@@ -37,5 +49,5 @@ export async function redirectLogin(req: NextRequest): Promise<NextResponse> {
     return response;
   }
 
-  return NextResponse.redirect(`https://${vaultDomain}/login?${req.nextUrl.search}`);
+  return NextResponse.redirect(`https://${vaultDomain}/login?${requestUrl.search}`);
 }

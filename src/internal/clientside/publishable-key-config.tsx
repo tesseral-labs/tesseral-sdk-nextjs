@@ -50,7 +50,13 @@ export function PublishableKeyConfigProvider({ children }: { children?: React.Re
       return;
     }
 
-    if (location.host !== "" && !publishableKeyConfig.trustedDomains.includes(location.host)) {
+    if (
+      location.host !== "" &&
+      !publishableKeyConfig.trustedDomains.includes(location.host) &&
+      !publishableKeyConfig.trustedDomains.some(
+        (domain) => location.host.endsWith(`.${domain}`) || location.host.startsWith(`${domain}:`),
+      )
+    ) {
       setError(
         new Error(
           `Tesseral Project ${publishableKeyConfig.projectId} is not configured to be served from ${location.host}. Only the following domains are allowed:\n\n${publishableKeyConfig.trustedDomains.join("\n")}\n\nGo to https://console.tesseral.com/settings/vault/domains and add ${location.host} to your list of trusted domains.`,
