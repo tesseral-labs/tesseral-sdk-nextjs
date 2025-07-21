@@ -34,7 +34,7 @@ export async function devModeCallback(req: NextRequest): Promise<NextResponse> {
 
   // To better handle localhost development, we only want to use the pathname of the redirect URL.
   const preferredRedirectUrl = new URL(redirectUrl);
-  const actualRedirectUrl = new URL(preferredRedirectUrl.pathname, req.nextUrl);
+  const actualRedirectUrl = new URL(preferredRedirectUrl.pathname + preferredRedirectUrl.search, req.nextUrl);
 
   const response = NextResponse.redirect(actualRedirectUrl);
 
